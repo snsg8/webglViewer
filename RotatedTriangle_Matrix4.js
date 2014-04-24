@@ -80,8 +80,9 @@ function main() {
   gl.drawArrays(gl.TRIANGLES, 0, n);
 
   var currentAngle=0;
-  //Regis Callback
-// Start drawing
+
+    //Regis Callback
+    // Start drawing
     var tick = function() {
         currentAngle = animate(currentAngle);  // Update the rotation angle
         draw(gl, n, currentAngle, xformMatrix, u_xformMatrix);   // Draw the triangle
@@ -93,7 +94,7 @@ function main() {
 
 function initVertexBuffers(gl) {
   var vertices = new Float32Array([
-    0, 0.5,   -0.5, -0.5,   0.5, -0.5
+        0, 0.5,   -0.5, -0.5,   0.5, -0.5
   ]);
   var n = 3; // The number of vertices
 
