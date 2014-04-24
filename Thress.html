@@ -6,10 +6,52 @@
     <style>canvas { width: 100%; height: 100% }</style>
 </head>
 <body>
+	<input type="file" id="filesX" name="files[]" multiple />
+	<input type="file" id="filesY" name="files[]" multiple />
+	<input type="file" id="filesZ" name="files[]" multiple />
+	<output id="list"></output>
+	
     <script src="lib/three.min.js"></script>
     <script src="lib/OrbitControls.js"></script>
+	
     <script>
-
+	var idx=0;
+	var xyzData=new Array(3);
+	
+	function handleFileSelect(evt) 
+	{
+				
+		var files = evt.target.files; // FileList object
+	    // Loop through the FileList and render image files as thumbnails.
+		for (var i = 0, f; f = files[i]; i++) {
+		var reader = new FileReader();
+		function onFileLoader()
+		{
+			var arrayBuffer = reader.result;
+			xyzData[idx]= new Float32Array(arrayBuffer);
+			//alert(xyzData[i][0]);
+			idx++;
+			alert(idx);
+			if(idx==3)
+			{	addPCL();idx=0;}
+		}
+		
+		//Read in the image file as a data 
+		reader.onload=onFileLoader;
+		reader.readAsArrayBuffer(f);
+		
+		//alert(files.length);
+		//var floatArray= new Float32Array(arrayBuffer);
+	  //var floatArray= new Float32Array(arrayBuffer);
+		
+    }
+  }
+		//File Handling
+		document.getElementById('filesX').addEventListener('change', handleFileSelect, false);
+		document.getElementById('filesY').addEventListener('change', handleFileSelect, false);
+		document.getElementById('filesZ').addEventListener('change', handleFileSelect, false);
+		
+		
         var scene = new THREE.Scene();
 
         ////////////
@@ -60,7 +102,23 @@
 
         var customMesh=new THREE.Mesh(customGeo,new THREE.MeshBasicMaterial({wireframe:true}));
         scene.add(customMesh);
-
+				
+	function addPCL()
+	{
+		//Point Clould 
+		var pointCount=(480*752);
+		var pointGeo=new THREE.Geometry();
+		for (var i=0;i<pointCount;i++)
+		{
+			 var pX = xyzData[0][i];
+			 var pY = xyzData[1][i];
+			 var pZ = xyzData[2][i];
+			 pointGeo.vertices.push(new THREE.Vector3(pX,pY,pZ));
+		}
+		
+		var pointCould=new THREE.ParticleSystem(pointGeo,new THREE.ParticleBasicMaterial());
+		scene.add(pointCould);
+	}
         //////////////
         //Control
         //////////////
@@ -84,7 +142,7 @@
         }
 
         render();
-
+	
     </script>
 
 </body>
