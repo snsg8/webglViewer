@@ -102,7 +102,8 @@
 
         var customMesh=new THREE.Mesh(customGeo,new THREE.MeshBasicMaterial({wireframe:true}));
         scene.add(customMesh);
-				
+
+        var lastPointCloud=0;
 	function addPCL()
 	{
 		//Point Clould 
@@ -115,9 +116,10 @@
 			 var pZ = xyzData[2][i];
 			 pointGeo.vertices.push(new THREE.Vector3(pX,pY,pZ));
 		}
-		
-		var pointCould=new THREE.ParticleSystem(pointGeo,new THREE.ParticleBasicMaterial());
-		scene.add(pointCould);
+		if(lastPointCloud!=0)
+            scene.remove(lastPointCloud)
+		lastPointCloud=new THREE.ParticleSystem(pointGeo,new THREE.ParticleSystemMaterial({size:0}));
+		scene.add(lastPointCloud);
 	}
         //////////////
         //Control
